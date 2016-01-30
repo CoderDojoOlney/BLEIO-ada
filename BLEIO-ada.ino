@@ -18,9 +18,9 @@
 #include <Adafruit_BLE.h>
 #include <Adafruit_BluefruitLE_SPI.h>
 #include <Adafruit_BluefruitLE_UART.h>
-#include "Bleio.h"
+#include "AdaUart.h"
 
-Bleio ble;            // BlueFruit LE class to manage IO
+AdaUart uart;         // BlueFruit LE class to manage IO
 String str;           // Data read from the local serial input
 String data;          // Data received from the LE device
 
@@ -29,7 +29,7 @@ String data;          // Data received from the LE device
 void setup() 
 {
   Serial.begin(9600);
-   ble.initBle("Dojo01");      // Initialize BLE. Will block until user connects
+  uart.initBle("Dojo01");      // Initialize BLE. Will block until user connects
 }
  
 
@@ -39,23 +39,20 @@ void setup()
 // Main loop - runs repeatedly
 void loop() 
 {
-  delay(100);       // Don't spin too fast!
-
-    if(Serial.available() > 0)
-    {
-        str = Serial.readStringUntil('\n');
-        ble.send(str.c_str());
-        Serial.print("-> ");
-        Serial.println(str);
-
-    }
-  // Check if there is data. If false, then no command waiting for us
-  if (ble.available())
-    {
-      data = ble.readCommand('!');
-      Serial.print("<- ");
-      Serial.println(data);
-    }
+  if(Serial.available() > 0)
+  {
+    str = Serial.readStringUntil('\n');
+    uart.sendString(str);
+    Serial.print("--> ");
+    Serial.println(str);
+  }
+  
+  if (uart.hasString())
+  {
+    data = uart.getString();
+    Serial.print("<-- ");
+    Serial.println(data);
+  }
 }
 
 

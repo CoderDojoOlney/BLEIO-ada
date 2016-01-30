@@ -10,8 +10,8 @@
 //
 /*****************************************************************************/
 
-#ifndef __Bleio_h__
-#define __Bleio_h__
+#ifndef __AdaUart_h__
+#define __AdaUart_h__
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -23,7 +23,7 @@
 // text buffer for reading commands
 #define BLEIO_BUFSIZE                    (20)
 
-class Bleio
+class AdaUart
 {
   private:
     uint8_t recvbuffer[BLEIO_BUFSIZE + 1];
@@ -31,13 +31,12 @@ class Bleio
     Adafruit_BluefruitLE_SPI ble;
   
   public:
-    Bleio();
+    AdaUart();
     void initBle(String name);
     bool isConnected();
-    String readCommand(const char cmdDelimiter); 
-    uint8_t available();
-    String readString();
-    void send(const String data);
+    uint8_t hasString();
+    String getString();
+    void sendString(const String& data);
 };
 
-#endif // __Bleio_h__
+#endif // __AdaUart_h__

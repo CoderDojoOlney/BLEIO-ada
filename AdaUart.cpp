@@ -1,4 +1,4 @@
-#include "Bleio.h"
+#include "AdaUart.h"
 
 //
 // An error helper. Prints and terminates
@@ -8,7 +8,7 @@ void error(const __FlashStringHelper*err)
   while (1);
 }
 
-Bleio::Bleio()
+AdaUart::AdaUart()
   : ble(8, 7, 6)
 {
   
@@ -17,7 +17,7 @@ Bleio::Bleio()
 
 //
 // Initialise the BLE connection in Data mode
-void Bleio::initBle(String name)
+void AdaUart::initBle(String name)
 {
   Serial.print(F("Initialising the Bluefruit LE module: "));
 
@@ -64,7 +64,7 @@ void Bleio::initBle(String name)
 
 //
 // Check if the client is connected
-bool Bleio::isConnected()
+bool AdaUart::isConnected()
 {
   ble.print("+++\n");
   bool isConn = ble.isConnected();
@@ -72,33 +72,12 @@ bool Bleio::isConnected()
   return isConn;
 }
 
-void Bleio::send(const String data)
+void AdaUart::sendString(const String& data)
 {
   ble.println(data.c_str());  
 }
 
-
-
-//
-// Read a data packet starting with !. Returns the last command in a string
-String Bleio::readCommand(const char cmdDelimiter) 
-{
-  String ret = "";
-
-  // read data from the buffer while it is available
-  while (ble.available()) 
-  {
-    char c =  ble.read();
-    if (c == cmdDelimiter) ret = "";
-    ret.concat(c);
-  }
-
-  if (!ret.startsWith("!")) ret = "";
-
-  return ret;
-}
-
-String Bleio::readString()
+String AdaUart::getString()
 {
   String ret = "";
   while (ble.available()) 
@@ -110,7 +89,7 @@ String Bleio::readString()
   return ret;
 }
 
-uint8_t Bleio::available()
+uint8_t AdaUart::hasString()
 {
   return ble.available();
 }
